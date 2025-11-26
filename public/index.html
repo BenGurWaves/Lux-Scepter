@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LUX SCEPTER</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --gold: #D4AF37; --cream: #FDF6E3; }
+    body,html{height:100%;margin:0;background:linear-gradient(135deg,#0F0718,#1A0F2E);color:var(--cream);font-family:'Cormorant Garamond',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;}
+    .crown{font-size:140px;margin-bottom:20px;}
+    h1{font-family:'Playfair Display',serif;font-size:72px;letter-spacing:8px;background:linear-gradient(45deg,#D4AF37,#FDF6E3); -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+    .tagline{font-size:24px;letter-spacing:4px;margin:20px 0 50px;}
+    button{background:transparent;border:2px solid var(--gold);color:var(--gold);padding:16px 48px;font-size:20px;margin:10px;cursor:pointer;transition:.4s;}
+    button:hover{background:var(--gold);color:#000;}
+    .live{position:absolute;top:30px;right:30px;}
+    .timer{position:absolute;top:30px;left:30px;color:#8B0000;}
+  </style>
+</head>
+<body>
+  <div class="crown">Crown</div>
+  <h1>LUX SCEPTER</h1>
+  <p class="tagline">Rule the feed. Own the crown.</p>
+  <button onclick="location.href='/signup'">SIGN UP</button>
+  <button onclick="location.href='/signin'">SIGN IN</button>
+  <div class="live" id="live">0 ruling right now</div>
+  <div class="timer">Founding Bloodline closes in <span id="timer">—</span></div>
+
+  <video autoplay muted loop playsinline style="position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;opacity:0.6;">
+    <source src="https://luxscepter.s3.amazonaws.com/royal-void-gold.mp4" type="video/mp4">
+  </video>
+
+  <script>
+    fetch('/api/live').then(r=>r.text()).then(n=>document.getElementById('live').textContent=n+' ruling right now');
+  </script>
+</body>
+</html>
