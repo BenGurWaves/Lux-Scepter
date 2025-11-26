@@ -3,7 +3,7 @@ compatibility_date = "2025-11-26"
 pages_build_output_dir = "public"
 
 [vars]
-JWT_SECRET = "change-this-to-a-random-32-char-string"
+JWT_SECRET = "f9D4k8X1vB7qR3mZ2sL0pT6wN5jH8yCk"
 
 [[r2_buckets]]
 binding = "R2"
