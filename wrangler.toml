@@ -1,10 +1,22 @@
 name = "lux-scepter"
 compatibility_date = "2025-11-26"
+pages_build_output_dir = "public"
 
-[[kv_namespaces]]
-binding = "USER_KV"
-id = "your-kv-id"  # Create in Dashboard > KV > Create Namespace
+[vars]
+JWT_SECRET = "change-this-to-a-random-32-char-string"
 
 [[r2_buckets]]
-binding = "LUX_FILES"
-bucket_name = "lux-files"
+binding = "R2"
+bucket_name = "lux-scepter-media"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "luxdb"
+database_id = "" # ← will be filled automatically
+
+[triggers]
+crons = []
+
+[[routes]]
+pattern = "yoursite.com/*"
+custom_domain = true
