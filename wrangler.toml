@@ -13,6 +13,3 @@ bucket_name = "lux-scepter-media"
 binding = "DB"
 database_name = "luxdb"
 database_id = "" # ← will be filled automatically
-
-[triggers]
-crons = []
