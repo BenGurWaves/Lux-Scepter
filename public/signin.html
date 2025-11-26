@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LUX SCEPTER • Sign In</title>
+  <style>
+    body{background:#000;color:#D4AF37;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}
+    .box{background:#111;padding:40px;border-radius:12px;width:340px;border:1px solid #333;}
+    input,button{width:100%;padding:14px;margin:10px 0;border:1px solid #444;background:#000;color:#D4AF37;border-radius:8px;font-size:16px;}
+    button{background:#D4AF37;color:#000;cursor:pointer;}
+    a{color:#D4AF37;font-size:14px;}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1 style="text-align:center;margin-bottom:30px">SIGN IN</h1>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="signin()">Enter the Realm</button>
+    <p style="text-align:center;margin-top:20px">
+      No account? <a href="/signup">Sign Up</a>
+    </p>
+  </div>
+
+  <script>
+    async function signin() {
+      const res = await fetch('/api/signin', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value
+        })
+      });
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem('lux_token', data.token);
+        location.href = '/home.html';
+      } else {
+        alert('Wrong credentials');
+      }
+    }
+  </script>
+</body>
+</html>
