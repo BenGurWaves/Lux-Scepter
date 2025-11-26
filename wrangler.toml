@@ -18,5 +18,5 @@ database_id = "" # ← will be filled automatically
 crons = []
 
 [[routes]]
-pattern = "yoursite.com/*"
+pattern = "luxscepter.com/*"
 custom_domain = true
