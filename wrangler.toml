@@ -16,7 +16,3 @@ database_id = "" # ← will be filled automatically
 
 [triggers]
 crons = []
-
-[[routes]]
-pattern = "luxscepter.com/*"
-custom_domain = true
