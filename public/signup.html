@@ -8,7 +8,7 @@
     .box{background:#111;padding:40px;border-radius:12px;width:340px;border:1px solid #333;}
     input,button{width:100%;padding:14px;margin:10px 0;border:1px solid #444;background:#000;color:#D4AF37;border-radius:8px;font-size:16px;}
     button{background:#D4AF37;color:#000;cursor:pointer;}
-    a{color:#D4AF37;font-size:14px;}
+    a{color:#D4AF37;}
   </style>
 </head>
 <body>
@@ -17,9 +17,9 @@
     <input type="text" id="username" placeholder="Username" required>
     <input type="email" id="email" placeholder="Email" required>
     <input type="password" id="password" placeholder="Password" required>
-    <button onclick="signup()">Create Account</button>
+    <button onclick="signup()">Create & Enter Realm</button>
     <p style="text-align:center;margin-top:20px">
-      Already have an account? <a href="/signin">Sign In</a>
+      Already rule? <a href="/signin.html">Sign In</a>
     </p>
   </div>
 
@@ -29,14 +29,16 @@
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          username: document.getElementById('username').value,
-          email: document.getElementById('email').value,
+          username: document.getElementById('username').value.trim(),
+          email: document.getElementById('email').value.trim(),
           password: document.getElementById('password').value
         })
       });
+
       const data = await res.json();
-      if (data.token) {
+      if (data.token && data.user) {
         localStorage.setItem('lux_token', data.token);
+        localStorage.setItem('lux_user', JSON.stringify(data.user));
         location.href = '/home.html';
       } else {
         alert('Error: ' + (data.error || 'Try again'));
