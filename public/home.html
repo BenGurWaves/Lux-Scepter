@@ -1,66 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
- <title>LUX SCEPTER • Home</title>
- <style>
-   body{background:#000;color:#D4AF37;font-family:system-ui;margin:0;padding:20px;}
-   .header{background:#111;padding:15px;text-align:center;position:fixed;top:0;left:0;right:0;z-index:10;}
-   .feed{max-width:600px;margin:80px auto 100px;}
-   .post{background:#111;margin:20px 0;padding:20px;border:1px solid #333;}
-   video, img{max-width:100%;border-radius:8px;}
-   .upload-box{background:#111;padding:30px;text-align:center;border:2px dashed #D4AF37;margin:40px 0;}
-   .logout{position:fixed;bottom:20px;right:20px;color:#888;}
- </style>
+  <meta charset="utf-8">
+  <title>LUX SCEPTER • Realm</title>
+  <style>
+    body{background:#000;color:#D4AF37;font-family:system-ui;margin:0;padding:20px;}
+    .header{background:#111;padding:20px;text-align:center;position:fixed;top:0;left:0;right:0;z-index:10;border-bottom:1px solid #333;}
+    .content{margin-top:100px;}
+    .upload{background:#111;padding:30px;margin:30px 0;border:2px dashed #D4AF37;text-align:center;}
+    .feed{max-width:700px;margin:0 auto;}
+    .post{background:#111;margin:20px 0;padding:20px;border-radius:12px;}
+    video,img{max-width:100%;border-radius:8px;}
+    .logout{position:fixed;bottom:20px;right:20px;color:#888;}
+  </style>
 </head>
 <body>
   <div class="header">
     <h1>LUX SCEPTER</h1>
-    <p>Welcome, <span id="user"></span></p>
+    <p>Welcome back, <strong id="username">...</strong></p>
   </div>
 
-  <div class="upload-box">
-    <input type="file" id="file" accept="image/*,video/*" />
-    <button onclick="upload()">Upload Edict / Dominion</button>
-    <p id="status"></p>
+  <div class="content">
+    <div class="upload">
+      <input type="file" id="file" accept="image/*,video/*">
+      <button onclick="upload()">Upload Edict / Dominion</button>
+      <p id="status"></p>
+    </div>
+
+    <div class="feed" id="feed">Loading realm...</div>
   </div>
 
-  <div class="feed" id="feed">Loading realm...</div>
-  <a href="/signout" class="logout">Sign Out</a>
+  <a href="/" class="logout" onclick="localStorage.clear();">Sign Out</a>
 
   <script>
     const token = localStorage.getItem('lux_token');
-    if (!token) location.href = '/';
+    const user = JSON.parse(localStorage.getItem('lux_user') || '{}');
 
-    fetch('/api/me', {headers:{Authorization:`Bearer ${token}`}})
-      .then(r=>r.json())
-      .then(u=>document.getElementById('user').textContent = u.username);
+    if (!token || !user.username) {
+      location.href = '/';
+    }
 
-    // Load public feed
-    fetch('/api/feed').then(r=>r.json()).then(posts=>{
-      const feed = document.getElementById('feed');
-      feed.innerHTML = posts.map(p=>`
+    document.getElementById('username').textContent = user.username;
+
+    // Load feed
+    fetch('/api/feed').then(r => r.json()).then(posts => {
+      document.getElementById('feed').innerHTML = posts.map(p => `
         <div class="post">
           <strong>@${p.username}</strong>
           ${p.type.startsWith('video') ? `<video controls src="${p.url}"></video>` : `<img src="${p.url}">`}
-          <small>${new Date(p.ts).toLocaleString()}</small>
+          <small>${new Date(p.ts * 1000).toLocaleString()}</small>
         </div>
-      `).join('');
+      `).join('') || '<p>The realm is silent... be the first to rule.</p>';
     });
 
+    // Upload
     async function upload() {
       const file = document.getElementById('file').files[0];
       if (!file) return;
-      document.getElementById('status').textContent = 'Getting secure link...';
+      document.getElementById('status').textContent = 'Securing link...';
+
       const res = await fetch('/api/upload-url', {
-        method:'POST',
-        headers:{'Content-Type':'application/json', Authorization:`Bearer ${token}`},
-        body:JSON.stringify({filename:file.name, type:file.type})
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ filename: file.name, type: file.type })
       });
-      const {url} = await res.json();
-      await fetch(url, {method:'PUT', body:file});
-      document.getElementById('status').textContent = 'Uploaded! Refresh in 5s.';
-      setTimeout(()=>location.reload(),5000);
+
+      const { url } = await res.json();
+      await fetch(url, { method: 'PUT', body: file });
+      document.getElementById('status').textContent = 'Uploaded! Refresh in 5s...';
+      setTimeout(() => location.reload(), 5000);
     }
   </script>
 </body>
